@@ -1,0 +1,15 @@
+[package]
+name = "gene-ctl"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "gene-ctl"
+path = "src/main.rs"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+clap = { workspace = true }
+tokio = { workspace = true }

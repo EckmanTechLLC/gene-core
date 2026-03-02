@@ -1,0 +1,23 @@
+[workspace]
+members = ["gene-core", "gene-ctl"]
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "0.8"
+bincode = "1"
+sled = "0.34"
+chrono = { version = "0.4", features = ["serde"] }
+rand = "0.8"
+crossbeam-channel = "0.5"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["fmt"] }
+tracing-appender = "0.2"
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+ratatui = "0.28"
+crossterm = "0.28"
+tokio = { version = "1", features = ["full"] }
+ctrlc = "3"
+tokio-tungstenite = { version = "0.28", features = ["native-tls"] }
+futures-util = "0.3"

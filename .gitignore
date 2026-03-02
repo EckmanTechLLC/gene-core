@@ -1,0 +1,5 @@
+/target/
+/gene-data/
+self_mod_staging.rs
+*.bin
+*.log
