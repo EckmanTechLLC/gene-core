@@ -44,16 +44,43 @@ Coordination layer: Flux WebSocket pub/sub (same pattern as `signal/flux.rs`).
 
 ### Observed / Observation-Only (weight=0)
 Feed the pattern/symbol machinery. Gene cannot affect these.
+All normalized to a comparable range before registration on the bus.
+
+**Raw market data:**
 
 | Signal | Source | Notes |
 |--------|--------|-------|
 | s_price_* | Flux OHLCV | Per-asset close, normalized |
 | s_volume_* | Flux OHLCV | Relative volume normalized |
-| s_volatility | Derived from OHLCV | Realized vol, normalized |
-| s_momentum | Derived from OHLCV | Rate of change, normalized |
+| s_spread | Order book | Bid/ask spread normalized |
 | s_sentiment | News/NLP feed | Normalized 0–1 |
 | s_vix | Macro feed | Normalized |
-| s_spread | Order book | Bid/ask spread normalized |
+
+**Derived indicators (also weight=0, observation-only):**
+
+These are simple mathematical transforms of price and volume. They are not trading signals.
+They are not privileged. They do not encode a thesis. They exist because giving the pattern
+layer multiple representations of the same underlying process accelerates regime abstraction —
+the symbol machinery can cluster around structure that would otherwise take longer to emerge
+from raw price alone.
+
+| Signal | Transform | Notes |
+|--------|-----------|-------|
+| s_ema_fast_* | EMA(9) of close | Short-window smoothing |
+| s_ema_slow_* | EMA(21) of close | Long-window smoothing |
+| s_ema_trend_* | EMA(50) of close | Trend-scale smoothing |
+| s_atr_* | ATR(14) | Normalized range — volatility of price movement |
+| s_vol_realized_* | Rolling stddev(close, 20) | Realized volatility, normalized |
+| s_zscore_* | Rolling z-score(close, 20) | Deviation from recent mean in stddev units |
+| s_volume_delta_* | Volume - EMA(volume, 20) | Relative volume pressure, normalized |
+
+**What to avoid adding:**
+- EMA crossover ratios (that encodes a thesis)
+- RSI, MACD, Bollinger Bands (composite constructs with implicit strategy assumptions)
+- Anything labeled "signal" or "indicator" in a trading-strategy sense
+- Any indicator whose interpretation requires domain knowledge to be meaningful
+
+If gene needs more than these, it will coin them via `CoinDerivedSignal`.
 
 ### Controlled (weight > 0)
 Gene tracks these in the imbalance function. Trading system pushes updates.
